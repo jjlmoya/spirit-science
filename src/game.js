@@ -4,6 +4,8 @@ import Ball from "/src/ball";
 
 import {buildLevel, level1, level2} from "/src/levels";
 import PauseScreen from "./screens/pause";
+import MenuScreen from "./screens/menu";
+import GameOverScreen from "./screens/gameOver";
 
 const GAMESTATE = {
     PAUSED: 0,
@@ -14,7 +16,7 @@ const GAMESTATE = {
 };
 
 export default class Game {
-    constructor(gameWidth, gameHeight, bricksPerRow) {
+    constructor(gameWidth, gameHeight) {
         this.gameWidth = gameWidth;
         this.gameHeight = gameHeight;
         this.gamestate = GAMESTATE.MENU;
@@ -22,7 +24,7 @@ export default class Game {
         this.paddle = new Paddle(this);
         this.gameObjects = [];
         this.bricks = [];
-        this.lives = 3;
+        this.lives = 1;
 
         this.levels = [level1, level2];
         this.currentLevel = 0;
@@ -45,7 +47,7 @@ export default class Game {
     }
 
     update(deltaTime) {
-        if (this.lives === 0) this.gamestate = GAMESTATE.GAMEOVER;
+        if (!this.lives) this.gamestate = GAMESTATE.GAMEOVER;
 
         if (
             this.gamestate === GAMESTATE.PAUSED ||
@@ -75,36 +77,16 @@ export default class Game {
         }
 
         if (this.gamestate === GAMESTATE.MENU) {
-            ctx.rect(0, 0, this.gameWidth, this.gameHeight);
-            ctx.fillStyle = "rgba(0,0,0,1)";
-            ctx.fill();
-
-            ctx.font = "30px Arial";
-            ctx.fillStyle = "white";
-            ctx.textAlign = "center";
-            ctx.fillText(
-                "Press SPACEBAR To Start",
-                this.gameWidth / 2,
-                this.gameHeight / 2
-            );
+            new MenuScreen(ctx, this.gameWidth, this.gameHeight)
         }
         if (this.gamestate === GAMESTATE.GAMEOVER) {
-            ctx.rect(0, 0, this.gameWidth, this.gameHeight);
-            ctx.fillStyle = "rgba(0,0,0,1)";
-            ctx.fill();
-
-            ctx.font = "30px Arial";
-            ctx.fillStyle = "white";
-            ctx.textAlign = "center";
-            ctx.fillText("GAME OVER", this.gameWidth / 2, this.gameHeight / 2);
+            new GameOverScreen(ctx, this.gameWidth, this.gameHeight);
         }
     }
 
     togglePause() {
-        if (this.gamestate == GAMESTATE.PAUSED) {
-            this.gamestate = GAMESTATE.RUNNING;
-        } else {
-            this.gamestate = GAMESTATE.PAUSED;
-        }
+        this.gamestate = this.gamestate === GAMESTATE.PAUSED
+            ? GAMESTATE.RUNNING
+            : GAMESTATE.PAUSED
     }
 }
