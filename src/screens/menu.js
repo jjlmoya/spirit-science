@@ -8,6 +8,7 @@ export default class MenuScreen {
         ctx.fillStyle = "rgba(0,0,0,1)";
         ctx.fill();
 
-        textService.renderCenterText("Press any button to start", ctx, width, height);
+        textService.renderCenterText("Menu", ctx, width, height);
     }
 }
+

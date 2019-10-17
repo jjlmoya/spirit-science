@@ -8,8 +8,6 @@ export default class PauseScreen {
         ctx.fillStyle = "rgba(0,0,0,0.5)";
         ctx.fill();
 
-
         textService.renderCenterText("Paused", ctx, width, height);
-
     }
 }
